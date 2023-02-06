@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO APP</title>
+    
+  <link rel="icon" type="image/x-icon" href="/TODO_logo.png">
+    <link rel="stylesheet" href="todo.css">
+</head>
+<body class="<%=ListName.theme %>">
+
+
+  <div class="themecir">
+    <div class="selec" id="selec" style="display: none;">
+      <div class="options">
+        <form action="/theme" class="tform" method="post">
+          <input type="hidden" name="listname" value="<%=ListName.name %>">
+          <input type="submit" name="themec" onclick="openchoice()" class="circleo yellowt" value="yellow">
+          <input type="submit" name="themec" onclick="openchoice()" class="circleo bluet" value="blue">
+          <input type="submit" name="themec" onclick="openchoice()" class="circleo pinkt" value="pink">
+        </form>
+      </div>
+    </div>
+
+
+    <div onclick="openchoice()"  class="ctext circleo <%=ListName.theme %>t">Theme</div>
+  </div>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+       <ul>
+        <li class="liname"><h3>Lists</h3></li>
+        <li class="liname">
+          <ul style="padding: 0;">
+            <form action="/dellist" method="post">
+
+              <% for (let i = 0; i < list.length; i++) { %>
+                <li class="iliname"> <a href="/<%=list[i].name%>"><%=list[i].name%></a><label><input type="submit" value="<%=list[i].id %>" name="del" class="addsub" ><svg class="delbtn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"/></svg></label></li>
+                
+                <% } %>
+              </ul>
+            </form>
+
+          </li>
+          <li><form action="/add" method="post">
+            <input type="text" class="nlitem" name="newlist" autocomplete="off" placeholder="New List"><label><input type="submit" value="<%=ListName.name %>" name="add" class="addsub"><svg class="add" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" viewBox="0 0 292.377 292.377" xml:space="preserve">
+              <g>
+                <path style="fill:white;"  d="M146.188,0C65.576,0,0,65.582,0,146.188s65.576,146.188,146.188,146.188   s146.188-65.582,146.188-146.188S226.801,0,146.188,0z M194.962,152.155h-42.806v42.8c0,3.3-2.667,5.967-5.967,5.967   c-3.3,0-5.967-2.667-5.967-5.967v-42.8H97.415c-3.294,0-5.967-2.673-5.967-5.967s2.673-5.967,5.967-5.967h42.806V97.415   c0-3.294,2.667-5.967,5.967-5.967c3.3,0,5.967,2.673,5.967,5.967v42.806h42.806c3.3,0,5.967,2.673,5.967,5.967   S198.261,152.155,194.962,152.155z"/>
+              </g>
+              </svg></label>
+          </form></li>
+        </ul>
+        <a href="/logout"> 
+            <div id="logout"><svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" fill="whitesmoke" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><path d="M4,12c0,0.276123,0.223877,0.5,0.5,0.5h8.7930298l-2.6465454,2.6464844c-0.09375,0.09375-0.1464233,0.2208862-0.1464233,0.3534546C10.5,15.776062,10.723877,15.999939,11,16c0.1326294,0.0001221,0.2598267-0.0525513,0.3534546-0.1464844l3.5-3.5c0.000061-0.000061,0.0001221-0.000061,0.0001831-0.0001221c0.1951294-0.1952515,0.1950684-0.5117188-0.0001831-0.7068481l-3.5-3.5c-0.1937256-0.1871338-0.5009155-0.1871338-0.6947021,0c-0.1986084,0.1918335-0.2041016,0.5083618-0.0122681,0.7069702L13.2930298,11.5H4.5C4.223877,11.5,4,11.723877,4,12z M17.5,2h-11C5.119812,2.0012817,4.0012817,3.119812,4,4.5v4C4,8.776123,4.223877,9,4.5,9S5,8.776123,5,8.5v-4C5.0009155,3.671936,5.671936,3.0009155,6.5,3h11c0.828064,0.0009155,1.4990845,0.671936,1.5,1.5v15c-0.0009155,0.828064-0.671936,1.4990845-1.5,1.5h-11c-0.828064-0.0009155-1.4990845-0.671936-1.5-1.5v-4C5,15.223877,4.776123,15,4.5,15S4,15.223877,4,15.5v4c0.0012817,1.380188,1.119812,2.4987183,2.5,2.5h11c1.380188-0.0012817,2.4987183-1.119812,2.5-2.5v-15C19.9987183,3.119812,18.880188,2.0012817,17.5,2z"/></svg>Logout</div></a>
+      </div>
+      <span class="hammenu" onclick="openNav()">&#9776; <img src="TODO_logo.png" class="logo" alt=""> ToDo App </span>
+
+
+      <div class="main">
+       <div class="title">
+        <h1><%= ListName.name %></h1>
+       </div>
+        <div class="list">
+          <ul class="items">
+            
+            <% for (let i = 0; i < itemlist.length; i++) { %>
+              <form action="/delete" method="post">
+              <% if(i==0){ %>
+
+                  <li class="item  <%=ListName.theme %>item fitem" ><label class="lbl"><input type="hidden" name="lname" value="<%=ListName.name %>"></input> <input type="checkbox" name="delid" onclick="this.form.submit()" value="<%= itemlist[i]._id %>"> <%=itemlist[i].name%></label> </li> 
+              <%  } else{ %>
+                  
+                  <li class="item <%=ListName.theme %>item" ><label class="lbl"><input type="hidden" name="lname" value="<%=ListName.name %>"></input> <input type="checkbox" name="delid" onclick="this.form.submit()" value="<%= itemlist[i]._id %>"> <%=itemlist[i].name%></label> </li> 
+                  <%  } %>
+
+              </form>
+                <% } %>
+
+                <li class="item <%=ListName.theme %>item litem"><form action="/<%=ListName.name %>" id="newform" method="post"><input type="text" autocomplete="off" name="inputitem" class="nitem" placeholder="New Item"><label><input type="submit" value="<%=ListName.name %>" name="add" class="addsub" ><svg class="add" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" viewBox="0 0 292.377 292.377" xml:space="preserve">
+                  <g>
+                    <path style="fill:#010002;"  d="M146.188,0C65.576,0,0,65.582,0,146.188s65.576,146.188,146.188,146.188   s146.188-65.582,146.188-146.188S226.801,0,146.188,0z M194.962,152.155h-42.806v42.8c0,3.3-2.667,5.967-5.967,5.967   c-3.3,0-5.967-2.667-5.967-5.967v-42.8H97.415c-3.294,0-5.967-2.673-5.967-5.967s2.673-5.967,5.967-5.967h42.806V97.415   c0-3.294,2.667-5.967,5.967-5.967c3.3,0,5.967,2.673,5.967,5.967v42.806h42.806c3.3,0,5.967,2.673,5.967,5.967   S198.261,152.155,194.962,152.155z"/>
+                  </g>
+                  </svg></label></form></li>
+              </ul>
+        </div>
+
+      </div>
+
+
+
+      <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "300px";
+        document.getElementById("logout").style.display = "flex";
+      }
+      
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("logout").style.display = "none";
+      }
+      function openchoice(){
+        var x = document.getElementById("selec");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+      }
+      </script>
+    
+</body>
+</html>
