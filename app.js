@@ -30,7 +30,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/TODO');
+mongoose.connect(process.env.ATLAS);
 
 
 
@@ -70,21 +70,18 @@ const User = new mongoose.model("User", userSchema);
 
 passport.use(User.createStrategy());
 
-passport.serializeUser(function(user, cb) {
-    process.nextTick(function() {
-      return cb(null, {
-        id: user.id,
-        username: user.username,
-        picture: user.picture
-      });
+
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id); 
+});
+
+
+passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+        done(err, user);
     });
-  });
-  
-  passport.deserializeUser(function(user, cb) {
-    process.nextTick(function() {
-      return cb(null, user);
-    });
-  });
+});
   
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
@@ -93,12 +90,14 @@ passport.use(new GoogleStrategy({
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log(profile);
+    // console.log(profile);
     firstname=profile.displayName.split(" ")[0];
+    console.log("bello",firstname);
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        User.findOne({googleId:profile.id},(err,result)=>{
+        User.findOne({googleId:profile.id},(er,result)=>{
            result.fullname= profile.displayName,
            result.lists=[{name:firstname+"'s notes",theme:"yellow",items:defaultitems}] 
+           result.save();
         })
         return cb(err, user);
     });
@@ -123,7 +122,6 @@ passport.authenticate('google', { scope: ['profile'] }));
 app.get('/auth/google/todo', 
 passport.authenticate('google', { failureRedirect: '/login' }),
 function(req, res) {
-    // Successful authentication, redirect home.
     res.redirect("/"+firstname+"'s notes");
   });
 
@@ -140,9 +138,9 @@ app.post("/delete", (req, res) => {
                     list.items.splice(list.items.findIndex(a=>a._id==delid),1);
 
                 }})
-                result.save();
+                result.save().then(res.redirect("/" + listname));
         })
-        res.redirect("/" + listname);
+        
     } else {
         res.redirect("/login");
     }
@@ -159,9 +157,9 @@ app.post("/theme",(req,res)=>{
                     list.theme=newc;
 
                 }})
-                result.save();
+                result.save().then(res.redirect("/" + listname));
         })
-        res.redirect("/" + listname);
+        // res.redirect("/" + listname);
     } else {
         res.redirect("/login");
     }
@@ -228,7 +226,6 @@ app.post("/login", (req, res) => {
             passport.authenticate("local")(req,res,()=>{
                 User.findOne({username:req.body.username},(err,result)=>{
                     firstname=result.fullname.split(" ")[0];
-                    
                 })
                 res.redirect("/");
             })
@@ -270,9 +267,9 @@ app.get("/:customListName", (req, res) => {
                     // console.log("ammi");
                     const nlist= new List({name:customListName,theme:"yellow",items:defaultitems});
                     result.lists.push(nlist);
-                    result.save();
+                    result.save().then(res.redirect("/"+customListName));
                 })
-                res.redirect("/"+customListName);
+                
                 }
            
         });
@@ -291,11 +288,11 @@ app.post("/:customListName", (req, res) => {
             result.lists.forEach((list)=>{
                 if(list.name==listname){
                     list.items.push(itemadded);
-                    result.save();
+                    result.save().then(res.redirect("/" + listname));
                 }
             })
         });
-        res.redirect("/"+listname);
+        // res.redirect("/"+listname);
 
     } else {
         res.redirect("/login");
