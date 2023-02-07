@@ -30,7 +30,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-mongoose.connect(process.env.ATLAS);
+mongoose.connect("mongodb+srv://Ddharmani:MongoDharmani@cluster0.xjyjszr.mongodb.net/TODO");
 
 
 
