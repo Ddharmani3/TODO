@@ -245,7 +245,9 @@ app.get("/logout",(req,res)=>{
 
 // login-signup routes end 
 
-app.get("/Favicon.ico",(req,res)=>{});
+app.get("/Favicon.ico",(req,res)=>{
+    res.redirect("/");
+});
 app.get("/:customListName", (req, res) => {
     const customListName = _.capitalize(req.params.customListName);
     
